@@ -1,0 +1,3 @@
+[submodule "Benchmark/hpcbenchmark-collection"]
+	path = Benchmark/hpcbenchmark-collection
+	url = https://github.com/chenjinkun/hpcbenchmark-collection.git
