@@ -1,6 +1,9 @@
 #result
 result/*
 
+#objective
+*.o
+
 #bin and lib
 bin/*
 lib/*
