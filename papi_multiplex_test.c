@@ -27,7 +27,6 @@ void result_to_file(FILE *fp, long long *counter_values)
 void sampling_handler(int eventSet, void *address, long_long overflow_vector, void *context)
 {
     PAPI_read(eventSet, counter_values);
-    PAPI_reset(eventSet);
     result_to_file(fout, counter_values);
 }
 
@@ -67,7 +66,16 @@ void mytest_papi_init(char *filename, char *kernelname, int mode)
 
     if(mode == 0) //multiplex
     {
-        PAPI_set_multiplex(eventSet);
+        // PAPI_set_multiplex(eventSet);
+        PAPI_option_t mpx, opt;
+        memset( &mpx, 0x0, sizeof ( mpx ) );
+        mpx.multiplex.eventset = eventSet;
+        mpx.multiplex.flags = PAPI_MULTIPLEX_DEFAULT;
+        mpx.multiplex.ns = 1;
+        PAPI_set_opt( PAPI_MULTIPLEX, &mpx );
+
+        PAPI_get_opt(PAPI_MULTIPLEX, &opt);
+        printf("multiplex resolution = %d ns\n", opt.multiplex.ns);
     }
 
     PAPI_add_event(eventSet, PAPI_TOT_CYC);
