@@ -13,6 +13,8 @@ int NUM_EVENTS;
 
 FILE *fout;
 
+int overflow_cycle[]={1000000, 1000000, 130000}; //for cascade, set T_{mlpx} = T_{papisample}
+
 //helperfunctions
 void result_to_file(FILE *fp, long long *counter_values)
 {
@@ -31,7 +33,7 @@ void sampling_handler(int eventSet, void *address, long_long overflow_vector, vo
 }
 
 //lib functions
-void mytest_papi_init(char *filename, char *kernelname, int mode)
+void mytest_papi_init(char *filename, char *kernelname, int mode, int arch)
 {
     NUM_EVENTS = 0;
     PAPI_library_init(PAPI_VER_CURRENT);
@@ -71,7 +73,7 @@ void mytest_papi_init(char *filename, char *kernelname, int mode)
         memset( &mpx, 0x0, sizeof ( mpx ) );
         mpx.multiplex.eventset = eventSet;
         mpx.multiplex.flags = PAPI_MULTIPLEX_DEFAULT;
-        mpx.multiplex.ns = 1;
+        mpx.multiplex.ns = 32767;
         PAPI_set_opt( PAPI_MULTIPLEX, &mpx );
 
         PAPI_get_opt(PAPI_MULTIPLEX, &opt);
@@ -89,7 +91,7 @@ void mytest_papi_init(char *filename, char *kernelname, int mode)
         }
     }
 
-    PAPI_overflow(eventSet, PAPI_TOT_CYC, 1000000, 0, sampling_handler);
+    PAPI_overflow(eventSet, PAPI_TOT_CYC, overflow_cycle[arch], 0, sampling_handler);
 
     char outfilename[1024];
     if(mode == 0)
