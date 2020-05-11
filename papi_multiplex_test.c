@@ -12,7 +12,7 @@ char **testEventname;
 int eventSet;
 int NUM_EVENTS;
 
-PAPI_MLPX_attr attr;
+PAPI_MPX_attr attr;
 FILE *fout;
 struct timespec start, end;
 
@@ -175,14 +175,14 @@ void mytest_papi_count_init(char *filename, char *kernelname, int mode, int arch
 
     if(mode == -1)
     {
-	    memset(&attr, 0x0, sizeof(PAPI_MLPX_attr));
-        PAPI_MLPX_sampling_init(&attr);
-        PAPI_MLPX_create_eventset(&attr, &eventSet);
+	    memset(&attr, 0x0, sizeof(PAPI_MPX_attr));
+        PAPI_MPX_sampling_init(&attr);
+        PAPI_MPX_create_eventset(&attr, &eventSet);
         for(id = 0; id < NUM_EVENTS; ++id)
         {
-            PAPI_MLPX_add_event(&attr, eventSet, testEvent[id]);
+            PAPI_MPX_add_event(&attr, &eventSet, testEvent[id]);
         }
-        PAPI_MLPX_start(&attr, eventSet, 100000000);
+        PAPI_MPX_start(&attr, &eventSet, 500*1e6);
     }
     else
     {
@@ -216,7 +216,9 @@ void mytest_papi_count_stop(int mode)
 
     if(mode == -1)
     {
-        PAPI_MLPX_stop(&attr, eventSet, counter_values, 0);
+        PAPI_MPX_stop(&attr, &eventSet, counter_values, METHOD, PAPI_MPX_SAVING_RAW);
+
+        PAPI_MPX_finalize(&attr);
     }
     else
     {

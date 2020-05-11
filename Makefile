@@ -1,5 +1,6 @@
 CC=gcc
-CFLAGS=
+METHOD=
+CFLAGS=-DMETHOD=$(METHOD)
 build: libmypapi.a
 
 libmypapi.a: papi_multiplex_test.o
