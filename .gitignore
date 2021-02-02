@@ -7,3 +7,4 @@ result/*
 #bin and lib
 bin/*
 lib/*
+*.bin
