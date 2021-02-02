@@ -8,3 +8,10 @@ result/*
 bin/*
 lib/*
 *.bin
+#stream executable
+stream.hsw*
+Benchmark/hpcbenchmark-collection/raws/
+Benchmark/hpcbenchmark-collection/log/
+Benchmark/hpcbenchmark-collection/particlefilter/*
+Benchmark/hpcbenchmark-collection/stream/*
+Benchmark/hpcbenchmark-collection/UoB/*
