@@ -173,7 +173,7 @@ void mytest_papi_count_init(char *filename, char *kernelname, int mode, int arch
 
     eventSet = PAPI_NULL;
 
-    if(mode == -1)
+    if(mode != -2)
     {
 	    memset(&attr, 0x0, sizeof(PAPI_MPX_attr));
         PAPI_MPX_sampling_init(&attr);
@@ -182,7 +182,7 @@ void mytest_papi_count_init(char *filename, char *kernelname, int mode, int arch
         {
             PAPI_MPX_add_event(&attr, &eventSet, testEvent[id]);
         }
-        PAPI_MPX_start(&attr, &eventSet, 500*1e6);
+        PAPI_MPX_start(&attr, &eventSet, 21*1e6);
     }
     else
     {
@@ -192,6 +192,11 @@ void mytest_papi_count_init(char *filename, char *kernelname, int mode, int arch
         if(mode == 0) //multiplex
         {
             PAPI_set_multiplex(eventSet);
+        }
+
+        for(id = 0; id < NUM_EVENTS; ++id)
+        {
+            printf("event %d %s\n", id ,testEventname[id]);
         }
 
         for(id = 0; id < NUM_EVENTS; ++id)
@@ -214,10 +219,9 @@ void mytest_papi_count_stop(int mode)
 {
     int i;
 
-    if(mode == -1)
+    if(mode != -1)
     {
-        PAPI_MPX_stop(&attr, &eventSet, counter_values, METHOD, PAPI_MPX_SAVING_RAW);
-
+        PAPI_MPX_stop(&attr, &eventSet, counter_values, METHOD, PAPI_MPX_SAVING_LEVEL);
         PAPI_MPX_finalize(&attr);
     }
     else
@@ -232,7 +236,8 @@ void mytest_papi_count_stop(int mode)
     fprintf(stderr, "PAPI result in mode %d:\n", mode);
     for(i = 0; i < NUM_EVENTS; ++i)
     {
-        fprintf(stderr,"\t%s: %lld\n", testEventname[i], counter_values[i]);
+        // fprintf(stderr,"\t%s: %lld\n", testEventname[i], counter_values[i]);
+        fprintf(stderr, "%lld\n", counter_values[i]);
     }
     // fprintf(stderr, "Total time elapsed with profile: %lf s\n", time_elapsed);
 
